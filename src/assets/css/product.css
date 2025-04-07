@@ -1,0 +1,274 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif !important;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  text-decoration: none !important;
+}
+
+.nav-link {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+}
+
+.strike {
+  text-decoration: line-through !important;
+}
+
+.w-25 {
+  width: 25%;
+}
+
+.w-75 {
+  width: 75%;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cnt-brder {
+  border-right: 3px solid grey;
+}
+
+.cnt-1 {
+  color: #86c33a;
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+}
+.cnt-2 {
+  color: #515151;
+  font-size: 18px;
+  text-align: center;
+  text-transform: capitalize !important;
+  font-weight: 700;
+  margin: 0;
+}
+.px-50 {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+.title-cnt1 {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.border-btm {
+  border-bottom: 2px solid grey;
+}
+
+.common-btn1 {
+  width: 100%;
+  max-width: 400px;
+  padding: 11px 24px;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  border: 2px solid #86c33a;
+  transition: 0.3s ease-in-out;
+}
+.common-btn2 {
+  width: 100%;
+  max-width: 400px;
+  padding: 11px 24px;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-padding {
+  padding: 6px 24px;
+}
+
+.common-btn1 {
+  /* background-color: #86c33a; */
+  color: #86c33a;
+}
+
+/* .common-btn1:hover {
+    background-color: #86c33a;
+    color: white;
+  } */
+
+.common-btn2 {
+  background-color: #86c33a;
+  color: white;
+}
+
+.common-btn2:hover {
+  background-color: #86c33a;
+}
+
+.product-detail {
+  background-color: rgb(255, 255, 255);
+  margin-bottom: 16px;
+  padding: 20px 16px;
+}
+
+.detail-main {
+  color: rgb(53, 53, 67);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  margin: 0px;
+  padding: 0px;
+  margin-bottom: 16px;
+}
+
+.detail-cnt {
+  color: rgb(97, 97, 115);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.css-1lwhjos-MuiPaper-root-MuiDrawer-paper {
+  z-index: 0 !important;
+  position: inherit !important;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.black-before,
+.black-before-2 {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+}
+
+.black-before {
+  top: 0px;
+}
+
+.black-before:before {
+  border-radius: 10px;
+  bottom: 0;
+  content: "";
+  height: 100%;
+  left: 0;
+  opacity: 0.4;
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.css-1h40rpk {
+  height: 100vh;
+  border-right: 1px solid #ddd;
+}
+
+.form-container {
+  background-color: #b3c8cf;
+  color: #495057;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form-content {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
+  border: 4px solid #ccc;
+  font-size: 20px;
+  font-family: Poppins, serif;
+  font-weight: 600;
+}
+
+a {
+  text-decoration: none;
+  color: #1b1833;
+  font-weight: 800;
+  transition: 0.7s;
+}
+
+a:hover {
+  color: #1b1833;
+  transition: 0.7s;
+}
+
+.head-cnt {
+  color: black;
+  font-weight: 600;
+}
+.button {
+  background-color: #1b1833;
+}
+
+.clamped-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.css-q949h2-MuiSlider-root {
+  color: #1976d2 !important;
+}
+
+.count-main{
+  margin-bottom: 8px;
+}
+
+.count-btn{
+  /* background-color: red; */
+  border-radius: 20%;
+  border: 1px solid #c2c2c2;
+  width: 28px;
+  height: 28px;
+}
+
+.count-cnt{
+  margin: 10px;
+}
+
+.cart-img {
+  position: relative;
+  display: inline-block;
+}
+
+.remove-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 35px;
+  color: red;
+  cursor: pointer;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+  transition: opacity 0.3s ease-in-out;
+}

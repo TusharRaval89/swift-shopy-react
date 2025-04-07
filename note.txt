@@ -1,0 +1,46 @@
+Task:
+
+6 static data no mao fervi ne home page par data show karva
+6 card ma differnt data hova pade
+je card par click kare te card na j data product ma page ma show thava joiye
+Ex :- /product?id=1
+
+profile par click kare atle sign up - login form khulvu pade
+add to cart par click kare to cart page open thavu pade ane tema home page ni jem data dekhava pade ane tema niche button aavse buy now
+
+Home page ma filter valo section sarkho kari nakhje jem ke amount, brand, category, rating, highest purchase filter
+
+http://localhost:3000/admin/dashboard <==== Routing
+
+
+
+new project for admin pannel:
+
+Pages:
+
+Signup
+login
+dashboard -> Total Product show karvi card ma
+product -> Product page ma add button aavse tena par click kare atle popup ma input field aavse add product mate
+        -> product ne show karva mate table aavse 
+        -> tema update, delete button aavse
+
+
+
+api ==> user nu personal middleware , user signup tokeen verify and token set karvanu, badhi api ma created data mukvani
+brands ni api,
+reviwe ni api  fieds== product id(populate), rating (star),message(description),
+
+admin
+ek brands nu table category ni jem copy 
+
+admin cart get api 
+cart get karava na for admin == table field = username,usermob,useremail,productname,quantity,price,created date
+
+website 
+header ma cart count bredcrub show karvanu ketli productcart ma che eee
+
+design
+product wala page ma reviwe wali design add karvani
+
+jya  jya day set karvani hoy tya dayjs  set karvanu npm dayjs e kai rite thay ee gpt 
