@@ -272,3 +272,29 @@ a:hover {
   padding: 5px;
   transition: opacity 0.3s ease-in-out;
 }
+
+.underline-short {
+  display: inline-block;
+  position: relative;
+}
+
+.underline-short::after {
+  content: "";
+  display: block;
+  width: 220px; 
+  height: 2px;
+  background: rgb(221, 221, 221);
+  margin-top: 4px;
+}
+
+
+.img-content img{
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+

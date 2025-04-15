@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
-import { Link } from "react-router-dom";
-import Tshirts from "../assets/images/amiri tshirts.jpg";
-import Truck from "../assets/images/truck.jpg";
-import Ring from "../assets/images/ring.jpg";
-import cricketKit from "../assets/images/kit.jpg";
-import rolex from "../assets/images/rolex watch.jpg";
-import iphone from "../assets/images/iphone.jpg";
-import { PiShoppingCartBold } from "react-icons/pi";
 import { AiFillDelete } from "react-icons/ai";
 import axios from "axios";
-import { Try } from "@mui/icons-material";
+import { PiShoppingCartBold } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
-const Cart = () => {
+const Cart = ({onAddToCart}) => {
   const [allProductData, setallProductData] = useState([]);
   const [value, setValue] = useState(1);
   const [quantity, setQuantity] = useState();
   const [isHovered, setIsHovered] = useState(false);
+  let token = localStorage.getItem("user_token");
+  // console.log("user tken==>",token);
+  const userProfile = JSON.parse(localStorage.getItem("getUserProfile"));
+  const userId = userProfile?._id
 
   const getCart = async () => {
     try {
-      let res = await axios.get("http://localhost:3000/cart/find");
+      let res = await axios.get("http://localhost:3000/cart/find/" + userId , {
+        headers: { Authorization: token },
+      });
       console.log("get cart ===>", res.data.data);
       setallProductData(res.data.data);
     } catch (error) {
@@ -31,9 +30,12 @@ const Cart = () => {
 
   const removeCart = async (id) => {
     try {
-      let res = await axios.delete("http://localhost:3000/cart/delete/" + id);
+      let res = await axios.delete("http://localhost:3000/cart/delete/" + id, {
+        headers: { Authorization: token },
+      });
       console.log(res.data.data);
       getCart();
+      onAddToCart()
     } catch (error) {
       console.log(error.response.data);
     }
@@ -49,7 +51,9 @@ const Cart = () => {
         productId,
         quantity,
       };
-      let res = await axios.post("http://localhost:3000/cart/create", payload);
+      let res = await axios.post("http://localhost:3000/cart/create", payload, {
+        headers: { Authorization: token },
+      });
       console.log("click plus", res.data.data);
       getCart();
     } catch (error) {
@@ -160,6 +164,20 @@ const Cart = () => {
                 {/* </Link> */}
               </div>
             ))}
+            {allProductData.length === 0 && (
+              <div
+                className="d-flex flex-column align-items-center justify-content-center"
+                style={{ height: "80vh" }}
+              >
+                {/* <img src={product} alt="" width={"30%"}/> */}
+                <h3 className="text-center">Your SwiftShopy Cart is empty</h3>
+                <Link to="/">
+                  <button className="common-btn1 mt-3">
+                    <PiShoppingCartBold /> ADD PRODUCT
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

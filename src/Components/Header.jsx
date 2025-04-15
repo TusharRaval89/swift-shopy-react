@@ -1,13 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+
 import { PiShoppingCartBold } from "react-icons/pi";
 import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
-import logo from "../assets/images/creative-logo.svg";
+import logo from "../assets/images/shopyfily_logo-removebg-preview (1).png";
 import axios from "axios";
 
-function Header({ searchProduct }) {
+function Header({ searchProduct, cartRefresh }) {
   const [product, setProduct] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  let token = localStorage.getItem("user_token");
+  const userProfile = JSON.parse(localStorage.getItem("getUserProfile"));
+  const userId = userProfile?._id
 
   const debounceTimeoutRef = useRef(null);
   const searchHandler = (event) => {
@@ -18,9 +24,48 @@ function Header({ searchProduct }) {
     }, 1000);
   };
 
-  // useEffect(() => {
-  //   searchProduct();
-  // }, []);
+  const getCart = async () => {
+    try {
+      let res = await axios.get("http://localhost:3000/cart/find/" + userId,
+        {
+          headers: { Authorization: token },
+        }
+      );
+      console.log("get cart ===>", res.data.data);
+      // const cartLength = res.data.data.length;
+      // console.log("Cart length ===>", cartLength);
+      setCartItems(res.data.data);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  // const cartCount = async () => {
+  //   try {
+  //     let res = await axios.get("http://localhost:3000/stats/");
+  //     console.log("cart count ===>", res.data);
+  //     setCartItems(res.data);
+  //   } catch (error) {
+  //     console.log(error.response.data);
+  //   }
+  // };
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("login_token");
+  //   navigate("/admin/login");
+  //   // console.log("Token after removal:", localStorage.getItem("login_token"));
+  // };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_token");
+    localStorage.removeItem("getUserProfile");
+    // localStorage.removeItem("isAddToCartClick");
+  };
+
+  useEffect(() => {
+    // cartCount();
+    getCart();
+  }, [cartRefresh]);
 
   return (
     <>
@@ -95,7 +140,7 @@ function Header({ searchProduct }) {
                   </datalist>
                 </form>
                 <ul className="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
-                  <li className="nav-item mx-3">
+                  {/* <li className="nav-item mx-3">
                     <Link to="/login">
                       <a className="nav-link" href="#">
                         <h3 className="text-center">
@@ -104,15 +149,52 @@ function Header({ searchProduct }) {
                         <div>Profile</div>
                       </a>
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="nav-item mx-3">
-                    <Link to="/cart">
-                      <a className="nav-link" href="#">
-                        <h3 className="text-center">
-                          <PiShoppingCartBold />
-                        </h3>
-                        <div>Cart</div>
-                      </a>
+                    <div className="profile-dropdown">
+                      <div class="dropdown">
+                        <button
+                          class="btn dropdown-toggle"
+                          type="button"
+                          id="dropdownMenuButton1"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <h3 className="text-center">
+                            <span className="fs-6 me-2">Hi, {userProfile?.firstname}</span><FaRegUser />
+                          </h3>
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton1"
+                        >
+                          <li>
+                            <Link to="/profile" class="dropdown-item" href="/login">
+                              <FaRegUser />
+                              <span className="mx-1">Profile</span>
+                            </Link>
+                          </li>
+                          <li onClick={handleLogout}>
+                            <Link to="/login" class="dropdown-item" href="#">
+                              <FiLogOut />
+                              <span className="mx-1">Logout</span>
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li className="nav-item mx-3">
+                    <Link to="/cart" className="nav-link">
+                      <div className="position-relative text-center">
+                        <PiShoppingCartBold size={30} />
+                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          {cartItems.length}
+                          <span className="visually-hidden">New alerts</span>
+                        </span>
+                      </div>
+                      <div>Cart</div>
                     </Link>
                   </li>
                 </ul>

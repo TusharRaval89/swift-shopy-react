@@ -33,6 +33,8 @@ function Login() {
     try {
       let res = await axios.post("http://localhost:3000/users/login", values);
       // console.log(res.data.data);
+      console.log("user token==>",res.data.token);
+      localStorage.setItem("user_token",res.data.token)
       toast.success("User Login Succefully!");
       navigate('/')
     } catch (error) {

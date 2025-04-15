@@ -29,13 +29,14 @@ product -> Product page ma add button aavse tena par click kare atle popup ma in
 
 api ==> user nu personal middleware , user signup tokeen verify and token set karvanu, badhi api ma created data mukvani
 brands ni api,
-reviwe ni api  fieds== product id(populate), rating (star),message(description),
+reviwe ni api  fieds== product id(populate), rating
+ (star),message(description),
 
 admin
-ek brands nu table category ni jem copy 
+ek brands nu table category ni jem copy==========
 
 admin cart get api 
-cart get karava na for admin == table field = username,usermob,useremail,productname,quantity,price,created date
+cart get karava na for admin == table field = username,useremail,productname,quantity,price,created date
 
 website 
 header ma cart count bredcrub show karvanu ketli productcart ma che eee

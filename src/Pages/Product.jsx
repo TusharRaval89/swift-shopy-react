@@ -29,6 +29,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { PiShoppingCartBold } from "react-icons/pi";
 import axios from "axios";
 import AllProduct from "../Components/AllProduct";
+import { Reviews, Try } from "@mui/icons-material";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 const productList = [
   {
@@ -130,10 +133,11 @@ const productList = [
   },
 ];
 
-function Product() {
+function Product({ onAddToCart, searchProductData }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const productId = queryParams.get("id");
+  // console.log("product id==>",productId);
 
   const [product, setProduct] = useState({});
   const [allProduct, setAllProduct] = useState([]);
@@ -141,15 +145,43 @@ function Product() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  let token = localStorage.getItem("user_token");
+  const [rating, setRating] = useState(1);
+  const [reviewData, setReviewData] = useState([
+    {
+      name: "tushar raval",
+      customersay:
+        "I am looking for the Nutri Trainer course, and I found the FGIIT Course here and its best for personal training and ",
+    },
+    {
+      name: "nehil raval",
+      customersay:
+        "demo am looking for the Nutri Trainer course, and I found the FGIIT Course here and its best for personal training and ",
+    },
+  ]);
+  const userProfile = JSON.parse(localStorage.getItem("getUserProfile"));
+  // console.log("userProfile===>",userProfile);
+
+  const formik = useFormik({
+    initialValues: {
+      productId: "",
+      ratingCount: "",
+      customerSay: "",
+      userId: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+
+      console.log("rating :-", rating);
+      addReview(values);
+    },
+  });
 
   useEffect(() => {
-    // if (!productId) {
-    //   setError("Invalid Product ID");
-    //   setLoading(false);
-    //   return;
-    // }
     if (productId) {
       fetchProduct(productId);
+      getReview();
+      // ProductReview(productId)
     } else {
       fetchAllProduct();
     }
@@ -158,7 +190,7 @@ function Product() {
   const fetchProduct = async (id) => {
     try {
       let res = await axios.get(`http://localhost:3000/product/find/${id}`);
-      console.log("get one product", res.data.data);
+      console.log("get one product", res);
 
       if (res.data.status === "Success") {
         setProduct(res.data.data);
@@ -189,21 +221,20 @@ function Product() {
     setLoading(false);
   };
 
+  const getReview = async () => {
+    try {
+      let res = await axios.get(
+        "http://localhost:3000/review/find/" + productId
+      );
+      console.log("get review==>", res.data.data);
+      setReviewData(res.data.data);
+    } catch (error) {
+      console.log(error.res.data);
+    }
+  };
+
   if (loading) return <h2 className="text-center mt-5">Loading...</h2>;
   if (error) return <h2 className="text-center mt-5">{error}</h2>;
-  // if (!product) return <h2 className="text-center mt-5">Product Not Found</h2>;
-
-  // useEffect(() => {
-  //   const product = productList.find((p) => p.id === Number(productId));
-  //   if (product) {
-  //     setSelectedProduct(product);
-  //     setSelectedImage(product.images[0]); // Set first image as default
-  //   }
-  // }, [productId]);
-
-  // if (!selectedProduct) {
-  //   return <h2 className="text-center mt-5">Product Not Found</h2>;
-  // }
 
   const AddToCardProduct = async () => {
     // console.log(productId);
@@ -212,14 +243,41 @@ function Product() {
       return;
     }
 
-    const cartItem = {
+    const payload = {
       productId: product._id,
       quantity: 1,
+      userId: userProfile?._id,
     };
 
     try {
-      let res = await axios.post("http://localhost:3000/cart/create", cartItem);
+      let res = await axios.post("http://localhost:3000/cart/create", payload, {
+        headers: { Authorization: token },
+      });
+      localStorage.setItem("isAddToCartClick", true);
       console.log("add to cart ==.", res.data.data);
+      toast.success("Product added to cart successfully!");
+
+      onAddToCart();
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const addReview = async (values) => {
+    const payload = {
+      productId: productId,
+      ratingCount: rating,
+      customerSay: values.customerSay,
+      userId: userProfile?._id,
+    };
+
+    try {
+      let res = await axios.post(
+        "http://localhost:3000/review/create",
+        payload
+      );
+      console.log("add review", res.data.data);
+      getReview();
     } catch (error) {
       console.log(error.response.data);
     }
@@ -228,12 +286,11 @@ function Product() {
   return (
     <>
       {allProduct.length > 0 ? (
-        <AllProduct />
+        <AllProduct searchProductData={searchProductData} />
       ) : (
         <div className="container-fluid mt-4">
-          <div className="container d-flex">
+          <div className="container d-flex ">
             <>
-              {/* Left Side - Main Image and Thumbnails */}
               <div className="w-50 px-15">
                 <img
                   src={selectedImage}
@@ -241,8 +298,6 @@ function Product() {
                   alt="Product"
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
-
-                {/* Small Images - Dynamically Set Based on Selected Product */}
                 <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
                   {product?.images?.map((img, index) => (
                     <img
@@ -257,25 +312,21 @@ function Product() {
                         border:
                           selectedImage === img ? "2px solid blue" : "none",
                       }}
-                      onClick={() => setSelectedImage(img)} // Update selected image
+                      onClick={() => setSelectedImage(img)}
                     />
                   ))}
                 </div>
               </div>
-
-              {/* Right Side - Product Details */}
               <div className="w-50 px-50">
                 <div className="title-cnt">
                   <h2 className="title-cnt1">{product.title}</h2>
                   <p>{product.description}</p>
                 </div>
-
-                {/* Ratings */}
                 <div className="d-flex align-items-center">
                   <span className="fs-6 d-flex align-items-center">
-                    <FaStar className="ms-1 text-warning" />{" "}
                     <FaStar className="ms-1 text-warning" />
-                    <FaStar className="ms-1 text-warning" />{" "}
+                    <FaStar className="ms-1 text-warning" />
+                    <FaStar className="ms-1 text-warning" />
                     <FaStar className="ms-1 text-warning" />
                     <FaStar className="ms-1 text-warning" />
                     <IoIosArrowDown className="ms-1" />
@@ -284,12 +335,9 @@ function Product() {
                     </p>
                   </span>
                 </div>
-
                 <div className="border-btm pb-1">
                   {product.highestPurchase}+k bought in last month
                 </div>
-
-                {/* Price Section */}
                 <p className="card-text fs-5 fw-bold mt-2">
                   <span>
                     <sup>₹</sup>
@@ -303,7 +351,6 @@ function Product() {
                   </span>
                 </p>
 
-                {/* Buttons */}
                 <div className="btn-grp d-flex flex-column align-items-center gap-3 mt-4 w-100 py-4">
                   <button
                     className="common-btn1 d-flex align-items-center justify-content-center gap-2 w-75 fs-5"
@@ -313,19 +360,102 @@ function Product() {
                   </button>
                   <button className="common-btn2 w-75 fs-5">BUY NOW</button>
                 </div>
-
-                {/* Additional Product Details */}
-                {/* <div className="product-detail">
-        <h6 className="detail-main">Product Details</h6>
-        <p className="detail-cnt">Brand: {selectedProduct.brand}</p>
-        <p className="detail-cnt">Category: {selectedProduct.category}</p>
-        <p className="detail-cnt">Quantity: {selectedProduct.quantity}</p>
-        <p className="detail-cnt">
-          Country of Origin: {selectedProduct.country}
-        </p>
-      </div> */}
               </div>
             </>
+          </div>
+
+          <div className="container mt-5">
+            <div className="w-50">
+              <div className="mb-4">
+                <h3 className="fw-semibold">Customer Reviews</h3>
+              </div>
+              <div className="review-section d-flex">
+                <div className="w-50">
+                  <div>
+                    <h5 className="mb-2 ">OVERALL RATING</h5>
+                  </div>
+                  <div>
+                    <h1 className="mb-2 fw-bold ">5.0</h1>
+                  </div>
+                  <div className="filter cnt ">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className="ms-1"
+                        color={i < rating ? "gold" : "gray"}
+                        size={30}
+                        style={{ cursor: "pointer" }}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <h5 className="fw-light">{reviewData.length} Reviews</h5>
+                  </div>
+                </div>
+                <div className="w-50">
+                  <div className="filter cnt ">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className="ms-1"
+                        color={i < rating ? "gold" : "gray"}
+                        size={30}
+                        onClick={() => setRating(i + 1)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    ))}
+                  </div>
+                  <form onSubmit={formik.handleSubmit}>
+                    <div className="mt-3">
+                      <input
+                        type="text"
+                        placeholder="Please Enter Your Reviews"
+                        name="customerSay"
+                        onChange={formik.handleChange}
+                        value={formik.values.customerSay}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <button type="submit" className="btn btn-success">
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="container mt-5">
+            <div className="w-50">
+              <div className="fw-bold mb-3">
+                <h3>Reviews</h3>
+              </div>
+              {reviewData.map((review, index) => (
+                <div key={index} className="user-review-cnt mb-5">
+                  <div className="d-flex align-items-center">
+                    <div>
+                      <span className="fw-bold">
+                        {review?.userId?.firstname} {review?.userId?.lastname}
+                      </span>
+                    </div>
+                    <div className="filter cnt ">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className="ms-1"
+                          color={i < review.ratingCount ? "gold" : "gray"}
+                          size={16}
+                          style={{ cursor: "pointer" }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <p>{review.customerSay}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

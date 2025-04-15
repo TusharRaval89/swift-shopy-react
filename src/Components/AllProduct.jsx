@@ -16,6 +16,7 @@ function AllProduct({searchProductData}) {
       console.log(error.response.data);
     }
   };
+
   
   useEffect(() => {
     if(searchProductData) {
